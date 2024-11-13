@@ -279,6 +279,22 @@
 	status = "okay";
 };
 
+&ecspi1 {
+	#address-cells = <1>;
+	#size-cells = <0>;
+	fsl,spi-num-chipselects = <1>;
+	pinctrl-names = "default";
+	pinctrl-0 = <&pinctrl_ecspi1 &pinctrl_ecspi1_cs>;
+	status = "okay";
+
+    ade9112: energy-meter@0 {
+        compatible = "adi,ade9112";
+        reg = <0>; /* Chip select 0 */
+        spi-max-frequency = <1000000>; /* Maximum SPI frequency 1 MHz */
+        status = "okay";
+    };
+};
+
 &ecspi2 {
 	#address-cells = <1>;
 	#size-cells = <0>;
@@ -638,6 +654,36 @@
 			};
 		};
 	};
+
+    lan9354: ethernet_switch@4d {
+        compatible = "microchip,lan9354";
+		pinctrl-names = "default";
+		pinctrl-0 = <&pinctrl_eth_switch>;
+        reg = <0x4d>;
+        interrupt-parent = <&gpio1>;
+        interrupts = <9 IRQ_TYPE_LEVEL_LOW>;
+
+        mdio {
+            #address-cells = <1>;
+            #size-cells = <0>;
+
+            ethernet-phy@0 {
+                reg = <0>;
+            };
+            ethernet-phy@1 {
+                reg = <1>;
+            };
+            ethernet-phy@2 {
+                reg = <2>;
+            };
+        };
+    };
+	se050: secure-element@48 {
+        compatible = "nxp,se050";
+        reg = <0x48>; /* I2C address of SE050 */
+        reset-gpios = <&gpio1 8 GPIO_ACTIVE_LOW>;
+        status = "okay";
+	};
 };
 
 &i2c3 {
@@ -684,6 +730,47 @@
 		wlf,hp-cfg = <3 2 3>;
 		wlf,gpio-cfg = <1 3>;
 		SPKVDD1-supply = <&reg_audio_pwr>;
+	};
+};
+
+&i2c4 {
+    clock-frequency = <100000>; /* Set I2C frequency to 100kHz */
+    pinctrl-names = "default";
+    pinctrl-0 = <&pinctrl_i2c4>;
+    status = "okay";
+
+    lis2hh12: accelerometer@1e {
+        compatible = "st,lis2hh12";
+        reg = <0x1e>; /* I2C address of LIS2HH12 */
+        interrupt-parent = <&gpio1>;
+		interrupts = <13 IRQ_TYPE_LEVEL_LOW>;
+        status = "okay";
+    };
+
+    rv3028: rtc@52 {
+        compatible = "microcrystal,rv3028";
+		pinctrl-names = "default";
+		pinctrl-0 = <&pinctrl_rv3028_evi>;
+        reg = <0x52>;
+        interrupt-parent = <&gpio1>;
+        interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
+        status = "okay";
+    };
+
+	nfc: nfc@28 {
+		compatible = "nxp,nxp-nci-i2c";
+		reg = <0x28>;
+		interrupt-parent = <&gpio1>;
+		interrupts = <12 IRQ_TYPE_LEVEL_HIGH>;
+        status = "okay";
+	};
+
+    tps25751: pd-controller@24 {
+        compatible = "ti,tps25750";
+        reg = <0x24>; /* I2C address of the TPS25751 */
+        interrupt-parent = <&gpio1>;
+        interrupts = <7 IRQ_TYPE_EDGE_FALLING>; /* Interrupt on GPIO2 pin 5 */
+        status = "okay";
 	};
 };
 
@@ -924,15 +1011,6 @@
 	status = "okay";
 };
 
-&uart3 {
-	pinctrl-names = "default";
-	pinctrl-0 = <&pinctrl_uart3>;
-	assigned-clocks = <&clk IMX8MP_CLK_UART3>;
-	assigned-clock-parents = <&clk IMX8MP_SYS_PLL1_80M>;
-	uart-has-rtscts;
-	status = "okay";
-};
-
 &usdhc2 {
 	assigned-clocks = <&clk IMX8MP_CLK_USDHC2>;
 	assigned-clock-rates = <400000000>;
@@ -998,6 +1076,20 @@
 	pinctrl_pwm4: pwm4grp {
 		fsl,pins = <
 			MX8MP_IOMUXC_SAI5_RXFS__PWM4_OUT	0x116
+		>;
+	};
+
+	pinctrl_ecspi1: ecspi1grp {
+		fsl,pins = <
+			MX8MP_IOMUXC_ECSPI1_SCLK__ECSPI1_SCLK		0x82
+			MX8MP_IOMUXC_ECSPI1_MOSI__ECSPI1_MOSI		0x82
+			MX8MP_IOMUXC_ECSPI1_MISO__ECSPI1_MISO		0x82
+		>;
+	};
+
+	pinctrl_ecspi1_cs: ecspi1cs {
+		fsl,pins = <
+			MX8MP_IOMUXC_ECSPI1_SS0__ECSPI1_SS0		0x40000
 		>;
 	};
 
@@ -1116,6 +1208,13 @@
 		fsl,pins = <
 			MX8MP_IOMUXC_I2C3_SCL__I2C3_SCL		0x400001c2
 			MX8MP_IOMUXC_I2C3_SDA__I2C3_SDA		0x400001c2
+		>;
+	};
+
+	pinctrl_i2c4: i2c4grp {
+		fsl,pins = <
+			MX8MP_IOMUXC_I2C4_SCL__I2C4_SCL		0x400001c2
+			MX8MP_IOMUXC_I2C4_SDA__I2C4_SDA		0x400001c2
 		>;
 	};
 
@@ -1253,15 +1352,6 @@
 		>;
 	};
 
-	pinctrl_uart3: uart3grp {
-		fsl,pins = <
-			MX8MP_IOMUXC_ECSPI1_SCLK__UART3_DCE_RX		0x140
-			MX8MP_IOMUXC_ECSPI1_MOSI__UART3_DCE_TX		0x140
-			MX8MP_IOMUXC_ECSPI1_SS0__UART3_DCE_RTS		0x140
-			MX8MP_IOMUXC_ECSPI1_MISO__UART3_DCE_CTS		0x140
-		>;
-	};
-
 	pinctrl_usdhc2: usdhc2grp {
 		fsl,pins = <
 			MX8MP_IOMUXC_SD2_CLK__USDHC2_CLK	0x190
@@ -1373,6 +1463,18 @@
 	pinctrl_csi_mclk: csi_mclk_grp {
 		fsl,pins = <
 			MX8MP_IOMUXC_GPIO1_IO15__CCM_CLKO2	0x50
+		>;
+	};
+
+	pinctrl_eth_switch: pinctrl_eth_switch_grp {
+		fsl,pins = <
+			MX8MP_IOMUXC_GPIO1_IO09__GPIO1_IO09	0x40
+		>;
+	};
+
+	pinctrl_rv3028_evi: pinctrl_rv3028_evi_grp {
+		fsl,pins = <
+			MX8MP_IOMUXC_GPIO1_IO10__GPIO1_IO10	0x40
 		>;
 	};
 };

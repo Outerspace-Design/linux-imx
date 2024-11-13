@@ -1,0 +1,57 @@
+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+%YAML 1.2
+---
+$id: http://devicetree.org/schemas/crypto/xlnx,zynqmp-aes.yaml#
+$schema: http://devicetree.org/meta-schemas/core.yaml#
+
+title: NXP SE050 Secure Element Device Tree Bindings
+
+maintainers:
+  - Anirban Bose <abose@outerspace.co>
+
+description: |
+  Device tree bindings for the NXP SE050 secure element connected over I2C, which
+  provides cryptographic operations and secure storage.
+
+properties:
+  compatible:
+    const: "nxp,se050"
+
+  reg:
+    description: |
+      The I2C address of the SE050 device.
+
+  vcc-supply:
+    description: |
+      Power supply for the SE050.
+    $ref: "/schemas/types.yaml#/definitions/phandle"
+
+  reset-gpios:
+    description: |
+      Optional GPIO used to reset the SE050 device.
+    $ref: "/schemas/types.yaml#/definitions/phandle-array"
+
+  status:
+    description: |
+      Device status, enabled or disabled.
+    enum: ["okay", "disabled"]
+
+required:
+  - compatible
+  - reg
+  - vcc-supply
+
+additionalProperties: false
+
+examples:
+  - |
+    i2c@1 {
+        se050: secure-element@48 {
+            compatible = "nxp,se050";
+            reg = <0x48>; /* I2C address of SE050 */
+            vcc-supply = <&reg_3v3>; /* Power supply */
+            reset-gpios = <&gpio1 2 GPIO_ACTIVE_LOW>; /* Optional reset GPIO */
+            status = "okay";
+        };
+    };
+...

@@ -1,0 +1,99 @@
+# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
+%YAML 1.2
+---
+$id: "http://devicetree.org/schemas/net/microchip,lan9354.yaml#"
+$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+
+title: Microchip LAN9354 Ethernet Switch
+
+maintainers:
+  - Anirban Bose <abose@outerspace.co>
+
+description: |
+  The LAN9354 is a high-performance, compact, and fully featured 3-port managed Ethernet switch 
+  developed by Microchip Technology. It is designed for consumer, embedded, and industrial 
+  electronic applications that require integrated and cost-effective Ethernet switching capabilities. 
+
+properties:
+  compatible:
+    enum:
+      - microchip,lan9354
+
+  reg:
+    maxItems: 1
+    description: |
+      Address of the device on the MDIO or SPI bus.
+
+  interrupt-parent:
+    description: |
+      Phandle to the parent interrupt controller.
+    $ref: "/schemas/types.yaml#/definitions/phandle"
+
+  interrupts:
+    maxItems: 1
+    description: |
+      The interrupt line for the LAN9354.
+
+  reset-gpios:
+    description: |
+      GPIO specifier for the reset signal.
+    $ref: "/schemas/types.yaml#/definitions/phandle-array"
+
+  mdio:
+    type: object
+    description: |
+      MDIO bus container if the LAN9354 is acting as an MDIO bus master.
+
+    properties:
+      "#address-cells":
+        const: 1
+      "#size-cells":
+        const: 0
+
+      ethernet-phy@0:
+        type: object
+        description: |
+          PHY node connected to port 0 of the switch.
+
+      ethernet-phy@1:
+        type: object
+        description: |
+          PHY node connected to port 1 of the switch.
+
+      ethernet-phy@2:
+        type: object
+        description: |
+          PHY node connected to port 2 of the switch.
+
+required:
+  - compatible
+  - reg
+
+additionalProperties: false
+
+examples:
+  - |
+    eth_switch@0 {
+        compatible = "microchip,lan9354";
+        reg = <0>;
+        interrupt-parent = <&gpio>;
+        interrupts = <5 IRQ_TYPE_LEVEL_LOW>;
+        reset-gpios = <&gpio 10 GPIO_ACTIVE_LOW>;
+
+        mdio {
+            #address-cells = <1>;
+            #size-cells = <0>;
+
+            ethernet-phy@0 {
+                reg = <0>;
+            };
+            ethernet-phy@1 {
+                reg = <1>;
+            };
+            ethernet-phy@2 {
+                reg = <2>;
+            };
+        };
+    };
+
+...

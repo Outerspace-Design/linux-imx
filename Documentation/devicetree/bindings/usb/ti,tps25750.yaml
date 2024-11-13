@@ -1,0 +1,64 @@
+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+%YAML 1.2
+---
+$id: "http://devicetree.org/schemas/usb/ti,tps25750.yaml#"
+$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+
+title: Texas Instruments TPS25750 USB Type-C and Power Delivery Controller
+
+maintainers:
+  - Anirban Bose <abose@outerspace.co>
+
+description: |
+  Device tree bindings for the Texas Instruments TPS25750 and TPS25751 USB Type-C
+  and Power Delivery (PD) controllers
+
+properties:
+  compatible:
+    enum:
+      - "ti,tps25750"
+
+  reg:
+    description: |
+      The I2C address of the TPS25750 or TPS25751 device.
+    maxItems: 1
+
+  interrupt-parent:
+    description: |
+      Phandle to the parent interrupt controller.
+    $ref: "/schemas/types.yaml#/definitions/phandle"
+
+  interrupts:
+    description: |
+      The interrupt line for the TPS25750 or TPS25751, typically used for signaling events.
+    maxItems: 1
+
+  enable-gpios:
+    description: |
+      Optional GPIO to enable or disable the TPS25750/51 device.
+    $ref: "/schemas/types.yaml#/definitions/phandle-array"
+
+  status:
+    description: |
+      Device status, enabled or disabled.
+    enum: ["okay", "disabled"]
+
+required:
+  - compatible
+  - reg
+
+additionalProperties: false
+
+examples:
+  - |
+    i2c@1 {
+        tps25751: pd-controller@24 {
+            compatible = "ti,tps25750";
+            reg = <0x24>; /* I2C address of the TPS25751 */
+            interrupt-parent = <&gpio2>;
+            interrupts = <5 IRQ_TYPE_EDGE_FALLING>; /* Interrupt on GPIO2 pin 5 */
+            enable-gpios = <&gpio1 4 GPIO_ACTIVE_HIGH>; /* Optional enable GPIO */
+            status = "okay";
+        };
+    };
+

@@ -1477,6 +1477,37 @@
 			MX8MP_IOMUXC_GPIO1_IO10__GPIO1_IO10	0x40
 		>;
 	};
+
+	pinctrl_cam_gpio: pinctrl_cam_gpio_grp {
+		fsl,pins = <
+			MX8MP_IOMUXC_GPIO1_IO11__GPIO1_IO11	0x40
+			MX8MP_IOMUXC_GPIO1_IO14__GPIO1_IO14	0x40
+			MX8MP_IOMUXC_SAI1_RXD3__GPIO4_IO05	0x40
+		>;
+	};
+
+	pinctrl_led_din: pinctrl_led_grp {
+		fsl,pins = <
+			MX8MP_IOMUXC_GPIO1_IO01__GPIO1_IO01	0x40
+		>;
+	};
+
+	pinctrl_led_act: pinctrl_act_grp {
+		fsl,pins = <
+			MX8MP_IOMUXC_SAI1_RXFS__GPIO4_IO00	0x40
+		>;
+	};
+
+	pinctrl_accboard_act_gpio: pinctrl_accboard_act_gpio_grp {
+		fsl,pins = <
+			MX8MP_IOMUXC_SAI1_TXC__GPIO4_IO11	0x40
+			MX8MP_IOMUXC_SAI1_TXD7__GPIO4_IO19	0x40
+			MX8MP_IOMUXC_SAI2_RXD0__GPIO4_IO23	0x40
+			MX8MP_IOMUXC_SAI2_MCLK__GPIO4_IO27	0x40
+			MX8MP_IOMUXC_SAI2_TXFS__GPIO4_IO24	0x40
+			MX8MP_IOMUXC_SAI2_RXC__GPIO4_IO22	0x40			
+		>;
+	};
 };
 
 &vpu_g1 {

@@ -427,6 +427,22 @@
 	status = "disabled";/* can2 pin conflict with pdm */
 };
 
+&mipi_csi_0 {
+	status = "okay";
+
+	port {
+		endpoint {
+			remote-endpoint = <&os08a20_mipi_0_ep>;
+			data-lanes = <4>;
+			csis-hs-settle = <16>;
+		};
+	};
+};
+
+&mipi_csi_1 {
+	status = "disabled";
+};
+
 &i2c1 {
 	clock-frequency = <400000>;
 	pinctrl-names = "default";
@@ -1391,22 +1407,6 @@
 
 &mix_gpu_ml {
 	status = "okay";
-};
-
-&mipi_csi_0 {
-	status = "okay";
-
-	port {
-		endpoint {
-			remote-endpoint = <&os08a20_mipi_0_ep>;
-			data-lanes = <4>;
-			csis-hs-settle = <16>;
-		};
-	};
-};
-
-&mipi_csi_1 {
-	status = "disabled";
 };
 
 &cameradev {

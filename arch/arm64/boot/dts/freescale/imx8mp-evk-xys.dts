@@ -10,7 +10,7 @@
 #include "imx8mp.dtsi"
 
 / {
-	model = "NXP i.MX8MPlus EVK board";
+	model = "XYS Project Leela board v0.6";
 	compatible = "fsl,imx8mp-evk", "fsl,imx8mp";
 
 	chosen {
@@ -600,9 +600,15 @@
 		compatible = "ovti,os08a20";
 		reg = <0x36>;
 		pinctrl-names = "default";
-		pinctrl-0 = <&pinctrl_csi_mclk>;
-		clocks = <&clk_dummy>;
+		pinctrl-0 = <&pinctrl_csi0_mclk>;
+		clocks = <&clk IMX8MP_CLK_IPP_DO_CLKO2>;
 		clock-names = "csi_mclk";
+		assigned-clocks = <&clk IMX8MP_CLK_IPP_DO_CLKO2>;
+		assigned-clock-parents = <&clk IMX8MP_CLK_24M>;
+		assigned-clock-rates = <24000000>;
+		rst-gpios = <&gpio1 6 GPIO_ACTIVE_LOW>;
+		pwn-gpios = <&gpio1 11 GPIO_ACTIVE_HIGH>;
+		xshdn2-gpios = <&gpio1 14 GPIO_ACTIVE_HIGH>;
 		csi_id = <0>;
 		mclk = <24000000>;
 		mclk_source = <0>;
@@ -1445,19 +1451,7 @@
 		>;
 	};
 
-	pinctrl_csi0_pwn: csi0_pwn_grp {
-		fsl,pins = <
-			MX8MP_IOMUXC_SD1_STROBE__GPIO2_IO11	0x10
-		>;
-	};
-
-	pinctrl_csi0_rst: csi0_rst_grp {
-		fsl,pins = <
-			MX8MP_IOMUXC_GPIO1_IO06__GPIO1_IO06		0x10
-		>;
-	};
-
-	pinctrl_csi_mclk: csi_mclk_grp {
+	pinctrl_csi0_mclk: csi_mclk_grp {
 		fsl,pins = <
 			MX8MP_IOMUXC_GPIO1_IO15__CCM_CLKO2	0x50
 		>;

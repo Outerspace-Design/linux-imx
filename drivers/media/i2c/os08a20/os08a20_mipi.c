@@ -111,6 +111,7 @@ struct os08a20 {
 	struct regulator *core_regulator;
 	struct regulator *analog_regulator;
 	unsigned int pwn_gpio;
+	unsigned int xshdn2_gpio;
 	unsigned int rst_gpio;
 	unsigned int mclk;
 	unsigned int mclk_source;
@@ -336,6 +337,9 @@ static int os08a20_power_on(struct os08a20 *sensor)
 	if (gpio_is_valid(sensor->pwn_gpio))
 		gpio_set_value_cansleep(sensor->pwn_gpio, 1);
 
+	if (gpio_is_valid(sensor->xshdn2_gpio))
+		gpio_set_value_cansleep(sensor->xshdn2_gpio, 1);
+
 	ret = clk_prepare_enable(sensor->sensor_clk);
 	if (ret < 0)
 		dev_err(dev, "%s: enable sensor clk fail\n", __func__);
@@ -347,6 +351,10 @@ static int os08a20_power_off(struct os08a20 *sensor)
 {
 	if (gpio_is_valid(sensor->pwn_gpio))
 		gpio_set_value_cansleep(sensor->pwn_gpio, 0);
+	
+	if (gpio_is_valid(sensor->xshdn2_gpio))
+		gpio_set_value_cansleep(sensor->xshdn2_gpio, 0);
+	
 	clk_disable_unprepare(sensor->sensor_clk);
 
 	return 0;
@@ -1245,6 +1253,20 @@ static int os08a20_probe(struct i2c_client *client)
 					       "os08a20_mipi_pwdn");
 		if (retval < 0) {
 			dev_warn(dev, "Failed to set power pin\n");
+			dev_warn(dev, "retval=%d\n", retval);
+			return retval;
+		}
+	}
+
+	sensor->xshdn2_gpio = of_get_named_gpio(dev->of_node, "xshdn2-gpios", 0);
+	if (!gpio_is_valid(sensor->xshdn2_gpio)) {
+		dev_warn(dev, "No sensor xshdn2 pin available");
+	} else {
+		retval = devm_gpio_request_one(dev, sensor->xshdn2_gpio,
+					       GPIOF_OUT_INIT_HIGH,
+					       "os08a20_mipi_xshdn2");
+		if (retval < 0) {
+			dev_warn(dev, "Failed to set xshdn2 pin\n");
 			dev_warn(dev, "retval=%d\n", retval);
 			return retval;
 		}

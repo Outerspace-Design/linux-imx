@@ -10,7 +10,7 @@
 #include "imx8mp.dtsi"
 
 / {
-	model = "XYS Project Leela board v0.6";
+	model = "XYS Project Leela board v0.7";
 	compatible = "fsl,imx8mp-evk", "fsl,imx8mp";
 
 	chosen {
@@ -596,9 +596,9 @@
 		};
 	};
 
-	os08a20_0: os08a20_mipi@36 {
+	os08a20_0: os08a20_mipi@3e {
 		compatible = "ovti,os08a20";
-		reg = <0x36>;
+		reg = <0x3e>;
 		pinctrl-names = "default";
 		pinctrl-0 = <&pinctrl_csi0_mclk>;
 		clocks = <&clk IMX8MP_CLK_IPP_DO_CLKO2>;

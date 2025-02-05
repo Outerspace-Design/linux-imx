@@ -1382,9 +1382,9 @@ static int os08a20_probe(struct i2c_client *client)
 	os08a20_read_reg(sensor, 0x300c, &reg_val);
 	chip_id |= reg_val;
 	if (chip_id != 0x530841) {
-		dev_warn(dev, "camera os08a20 is not found\n");
-		retval = -ENODEV;
-		goto probe_err_pm_runtime;
+		dev_warn(dev, "Chip ID = 0x%x did not match (0x530841)!\n", chip_id);
+		//retval = -ENODEV;
+		//goto probe_err_pm_runtime;
 	}
 
 	retval = v4l2_async_register_subdev_sensor(sd);

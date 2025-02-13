@@ -10,7 +10,7 @@
 #include "imx8mp.dtsi"
 
 / {
-	model = "XYS Project Leela board v0.8";
+	model = "NXP EVK Board v0.1";
 	compatible = "fsl,imx8mp-evk", "fsl,imx8mp";
 
 	chosen {
@@ -1432,7 +1432,7 @@
 		>;
 	};
 
-	pinctrl_csi0_mclk: csi_mclk_grp {
+	pinctrl_csi0_mclk: csi0_mclk_grp {
 		fsl,pins = <
 			MX8MP_IOMUXC_GPIO1_IO15__CCM_CLKO2	0x50
 		>;

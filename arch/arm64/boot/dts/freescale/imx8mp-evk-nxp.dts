@@ -10,7 +10,7 @@
 #include "imx8mp.dtsi"
 
 / {
-	model = "NXP EVK Board v0.1";
+	model = "NXP EVK Board v0.2";
 	compatible = "fsl,imx8mp-evk", "fsl,imx8mp";
 
 	chosen {
@@ -1522,11 +1522,11 @@
 	status = "okay";
 
 	cap_device {
-		status = "disabled";
+		status = "okay";
 	};
 
 	m2m_device {
-		status = "okay";
+		status = "disabled";
 	};
 };
 

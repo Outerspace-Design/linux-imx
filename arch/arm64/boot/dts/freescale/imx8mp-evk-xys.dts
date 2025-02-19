@@ -10,7 +10,7 @@
 #include "imx8mp.dtsi"
 
 / {
-	model = "XYS Project Leela Board v0.10";
+	model = "XYS Project Leela Board v0.11";
 	compatible = "fsl,imx8mp-evk", "fsl,imx8mp";
 
 	chosen {
@@ -1405,7 +1405,7 @@
 	};
 
 	m2m_device {
-		status = "disabled";
+		status = "okay";
 	};
 };
 
